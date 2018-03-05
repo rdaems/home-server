@@ -1,0 +1,5 @@
+body {
+  padding: 50px;
+}
+.tr { display:table-row; }
+.td { display:table-cell;

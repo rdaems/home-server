@@ -1,0 +1,36 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='utf-8')
+    style
+      include style.css
+    style
+      include css/bootstrap.min.css
+    title= 'Raspberry Pi Home'
+  body
+    h1 Welcome to the Raspberry Pi Home Server!
+    br
+    a(href=kodi_url)
+      h2 Kodi
+    a(href=rasptorrent_url)
+      h2 RaspTorrent
+    a(href=transmission_url)
+      h2 Transmission
+    a(href=sickrage_url)
+      h2 SickRage
+    a(href=couchpotato_url)
+      h2 CouchPotato
+    br
+    br
+    p(id='dashboard')
+
+    script(src='/socket.io/socket.io.js')
+    script.
+      var socket = io('http://localhost');
+      socket.on('info', function(info){
+        var output = ''
+        output += 'Temperature: ' + info.temp
+        output += '<br>Disk space: ' + info.disk.used + '/' + info.disk.total
+        console.log(info)
+        document.getElementById('dashboard').innerHTML = output
+      });
