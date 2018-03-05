@@ -26,11 +26,14 @@ html(lang="en")
 
     script(src='/socket.io/socket.io.js')
     script.
-      var socket = io('http://localhost');
+      var socket = io('http://raspberrypi.local');
       socket.on('info', function(info){
         var output = ''
-        output += 'Temperature: ' + info.temp
-        output += '<br>Disk space: ' + info.disk.used + '/' + info.disk.total
+        output += 'Temperature: ' + info.temp + ' deg. C'
+        output += '<br>Disk space: ' + (info.disk.used/1024/1024/1024).toFixed(1) + ' GB/' + (info.disk.total/1024/1024/1024).toFixed(1) + 'GB (' + (100*info.disk.used/info.disk.total).toFixed(1) + '%)'
+        output += '<br>VPN: ' + info.vpn
+        output += '<br>Public IP: ' + info.public_ip
+        output += '<br>Private IP: ' + info.private_ip
         console.log(info)
         document.getElementById('dashboard').innerHTML = output
       });

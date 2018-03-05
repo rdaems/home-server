@@ -3,6 +3,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var pug = require('pug');
 var diskspace = require('diskspace');
+var exec = require('child_process').exec;
 
 server.listen(80, () => console.log('app listens on port 80'))
 
@@ -20,16 +21,37 @@ function home(req, res) {
     res.end(html)
 }
 
-var info = {'temp': NaN, disk: {'used': NaN, 'total': NaN}};
+var info = {temp: NaN, disk: {'used': NaN, 'total': NaN}, vpn: undefined, public_ip: undefined, private_ip: undefined};
 function update_info(socket) {
-  info.temp = 25
-  socket.emit('info', info)
+  exec('cat /sys/class/thermal/thermal_zone0/temp', function (err, result) {
+    info.temp = (result / 1000).toFixed(1)
+    socket.emit('info', info)
+  });
 
-  diskspace.check('/', function (err, result)
+  diskspace.check('/mnt/hdd', function (err, result)
   {
     info.disk = result
     socket.emit('info', info)
   });
+
+  exec('expressvpn status', function (err, result) {
+    if (result[0] == 'N') {
+      info.vpn = 'not connected'
+    } else {
+      info.vpn = 'connected'
+    }
+    socket.emit('info', info)
+  });
+
+  exec('curl ipinfo.io/ip', function (err, result) {
+    info.public_ip = result
+    socket.emit('info', info)
+  });
+
+  exec('hostname -I', function (err, result) {
+      info.private_ip = result
+      socket.emit('info', info)
+    });
 }
 
 io.on('connection', function(socket){
