@@ -1,0 +1,20 @@
+{
+  "name": "home-server",
+  "version": "0.2.0",
+  "description": "Raspberry Pi Home Server",
+  "main": "home-server.js",
+  "dependencies": {
+    "express": "",
+    "http": "",
+    "socket.io": "".
+    "pug": "",
+    "diskspace": "",
+    "child_process": ""
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node home-server.js"
+  },
+  "author": "Rembert Daems <rembertdaems@gmail.com>",
+  "license": "MIT"
+}

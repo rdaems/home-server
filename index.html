@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title>Raspberry Pi Home</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+  <h1>Welcome to the Raspberry Pi Home Server!</h1>
+  <br>
+  <a href="http://raspberrypi.local:8080">
+    <h2>Kodi</h2>
+  </a>
+  <a href="http://raspberrypi.local:8081/search">
+    <h2>RaspTorrent</h2>
+  </a>
+  <a href="http://raspberrypi.local:9091">
+    <h2>Transmission</h2>
+  </a>
+  <a href="http://raspberrypi.local:8082">
+    <h2>SickRage</h2>
+  </a>
+  <a href="http://raspberrypi.local:5050">
+    <h2>CouchPotato</h2>
+  </a>
+  <a href="http://raspberrypi.local:2222/ssh/host/127.0.0.1">
+    <h2>SSH</h2>
+  </a>
+  <br>
+  <br>
+  <p id="dashboard"></p>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    var socket = io('http://raspberrypi.local');
+    socket.on('info', function(info){
+      var output = ''
+      output += 'Temperature: ' + info.temp + ' deg. C'
+      output += '<br>Disk space: ' + (info.disk.used/1024/1024/1024).toFixed(1) + ' GB/' + (info.disk.total/1024/1024/1024).toFixed(1) + 'GB (' + (100*info.disk.used/info.disk.total).toFixed(1) + '%)'
+      output += '<br>VPN: ' + info.vpn
+      output += '<br>Public IP: ' + info.public_ip
+      output += '<br>Private IP: ' + info.private_ip
+      console.log(info)
+      document.getElementById('dashboard').innerHTML = output
+    });
+  </script>
+</body>
+</html>
